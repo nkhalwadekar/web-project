@@ -1,15 +1,6 @@
 from flask import Flask, request, jsonify, abort
 app = Flask(__name__)
 
-@app.route("/")
-def hello():
-
-    data = {
-        "name": "joe"
-    }
-
-    return jsonify(data)
-
 @app.route("/echo", methods=['POST', 'GET'])
 def echo():
     incoming_json = request.get_json()
