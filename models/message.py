@@ -15,9 +15,18 @@ class Message(db.Model):
 
     def __init__(self, user_id, body):
         self.body = body
-        self.datetime = datetime.utcnow()
         self.user_id = user_id
 
+        self.datetime = datetime.utcnow()
 
-    def __repr__(self):
-        return '<User %r>' % self.username
+
+    def to_dict(self):
+        output = {}
+        output["id"] = self.id
+        output["body"] = self.body
+        output["user"] = self.user.to_dict()
+
+        return output
+
+    def __str__(self):
+        return "'<Message %r>' % self.id"

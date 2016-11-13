@@ -7,5 +7,11 @@ class User(db.Model):
     def __init__(self, username):
         self.username = username
 
+    def to_dict(self):
+        output = {}
+        output["id"] = self.id
+        output["username"] = self.username
+        return output
+
     def __repr__(self):
         return '<User %r>' % self.username
