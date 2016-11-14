@@ -75,6 +75,39 @@ def get_user_messages(username):
 
     return jsonify(response)
 
+
+@app.route("/messages/<message_id>/replies", methods=['POST'])
+def create_reply(message_id):
+    from models.message import Message
+    from models.user import User
+
+    incoming_json = request.get_json(force=True)
+
+    if incoming_json is None:
+        return abort(404)
+
+    username = incoming_json.get("username")
+
+    user = User.query.filter_by(username=username).first()
+
+    if user is None:
+        user = User(username)
+        db.session.add(user)
+        db.session.commit()
+
+    # Create the Model
+    m = Reply(user.id, message_id, incoming_json.get("input", ""))
+
+    # save it to the database
+    db.session.add(m)
+    db.session.commit()
+
+    response = {
+        "result": "ok"
+    }
+
+    return jsonify(response)
+
 if __name__ == "__main__":
     #app.run(debug=True, ssl_context='adhoc')
     app.run(debug=True)
