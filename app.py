@@ -56,6 +56,7 @@ def create_message():
 @app.route("/messages/<username>", methods=['GET'])
 def get_user_messages(username):
     from models.message import Message
+    from models.reply import Reply
     from models.user import User
 
     user = User.query.filter_by(username=username).first()
@@ -67,7 +68,14 @@ def get_user_messages(username):
 
     results = []
     for message in messages:
-        results.append(message.to_dict())
+        replies = Reply.query.filter_by(message_id=message.id)
+        replies_json = []
+        for reply in replies:
+            replies_json.append(reply.to_dict())
+
+        message_json = message.to_dict()
+        message_json["replies"] = replies_json
+        results.append(message_json)
 
     response = {
         "results": results
@@ -78,7 +86,7 @@ def get_user_messages(username):
 
 @app.route("/messages/<message_id>/replies", methods=['POST'])
 def create_reply(message_id):
-    from models.message import Message
+    from models.reply import Reply
     from models.user import User
 
     incoming_json = request.get_json(force=True)

@@ -12,7 +12,7 @@ class Reply(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship('User',
-        backref=db.backref('messages', lazy='dynamic'))
+        backref=db.backref('replies', lazy='dynamic'))
 
     message_id = db.Column(db.Integer, db.ForeignKey('message.id'))
     message = db.relationship('Message',
@@ -31,7 +31,6 @@ class Reply(db.Model):
         output["id"] = self.id
         output["body"] = self.body
         output["user"] = self.user.to_dict()
-        output["message"] = self.message.to_dict()
 
         return output
 
